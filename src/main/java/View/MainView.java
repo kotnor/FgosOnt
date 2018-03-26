@@ -1,4 +1,4 @@
-package View;
+package view;
 
 public interface MainView {
     void startParsing();
