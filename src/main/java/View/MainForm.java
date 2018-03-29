@@ -94,9 +94,9 @@ public class MainForm extends JFrame implements MainView{
         JMenu helpMenu = new JMenu("Справка");
         helpMenu.setFont(font);
 
-        JMenu newMenu = new JMenu("О программе");
-        newMenu.setFont(font);
-        helpMenu.add(newMenu);
+        JMenuItem aboutItem = new JMenu("О программе");
+        aboutItem.setFont(font);
+        helpMenu.add(aboutItem);
 
         return helpMenu;
     }

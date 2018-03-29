@@ -1,76 +1,61 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class ResMastering {
-    private HashMap<String, String> commonCompetencies;
-    private HashMap<String, String> commonProfCompetencies;
-    private HashMap<String, String> profCompetencies;
+    private List<String> commonCompetencies;
+    private List<String> commonProfCompetencies;
+    private List<String> profCompetencies;
     public static String KEY_NAME = "ТРЕБОВАНИЯ К РЕЗУЛЬТАТАМ ОСВОЕНИЯ ПРОГРАММЫ МАГИСТРАТУРЫ";
 
     public ResMastering(String block) {
-        commonCompetencies = new HashMap<String, String>();
-        commonProfCompetencies = new HashMap<String, String>();
-        profCompetencies = new HashMap<String, String>();
+        commonCompetencies = new ArrayList<String>();
+        commonProfCompetencies = new ArrayList<String>();
+        profCompetencies = new ArrayList<String>();
 
         parse(block);
     }
 
     private void parse(String block) {
-        block = block.substring(block.indexOf(":") + 1, block.lastIndexOf(").") + 2);
-        
-        System.out.println(block);
-        int startIndexCommon = -1;
-        int endIndexCommon = -1;
-        int startIndexCommonProf = -1;
-        int endIndexCommonProf = -1;
-        int startIndexProf = -1;
-        int endIndexProf = -1;
+        parseOK(block.substring(block.indexOf("5.2"), block.indexOf("5.3")));
+        parseOPK(block.substring(block.indexOf("5.3"), block.indexOf("5.4")));
+        parsePK(block.substring(block.indexOf("5.4"), block.indexOf("5.5")));
 
-        String[] lines = block.split("\n");
-        for (int i = 0; i < lines.length; i++) {
-            if (lines[i].contains("(ОК-")) {
-                startIndexCommon = i;
-                //System.out.println(i + " " + lines[i]);
-                break;
-            }
+        for (int i = 0; i < commonCompetencies.size(); i++) {
+            System.out.println("ОК-" + (i + 1) + " : " + commonCompetencies.get(i));
         }
 
-        for (int i = lines.length - 1; i >= 0; i--) {
-            if (lines[i].contains("(ОК-")) {
-                endIndexCommon = i;
-                //System.out.println(i + " " + lines[i]);
-                break;
-            }
+        for (int i = 0; i < commonProfCompetencies.size(); i++) {
+            System.out.println("ОПК-" + (i + 1) + " : " + commonProfCompetencies.get(i));
         }
 
-        for (int i = 0; i < lines.length; i++) {
-            if (lines[i].contains("(ОПК-")) {
-                startIndexCommonProf = i;
-            }
+        for (int i = 0; i < profCompetencies.size(); i++) {
+            System.out.println("ПК-" + (i + 1) + " : " + profCompetencies.get(i));
         }
-
-        for (int i = lines.length - 1; i >= 0; i--) {
-            if (lines[i].contains("(ОПК-")) {
-                endIndexCommonProf = i;
-            }
-        }
-
-        for (int i = 0; i < lines.length; i++) {
-            if (lines[i].contains("(ПК-")) {
-                startIndexProf = i;
-            }
-        }
-
-        for (int i = lines.length - 1; i >= 0; i--) {
-            if (lines[i].contains("(ПК-")) {
-                endIndexProf = i;
-            }
-        }
-        System.out.println("ОК: " + (endIndexCommon - startIndexCommon + 1));
     }
 
-    private void parseOK() {
+    private void parseOPK(String text) {
+        parseCompetencies(text, "(ОПК-", commonProfCompetencies);
+    }
 
+    private void parsePK(String text) {
+        parseCompetencies(text, "(ПК-", profCompetencies);
+    }
+
+    private void parseOK(String text) {
+        parseCompetencies(text, "(ОК-", commonCompetencies);
+    }
+
+    private void parseCompetencies(String text, String key, List<String> list) {
+        text = text.substring(text.indexOf(":") + 1); // remove header
+        String ok[] = text.split(";");
+        System.out.println(ok.length);
+        for (int i = 0; i < ok.length; i++) {
+            String okItem = ok[i];
+            String description = okItem.substring(0, ok[i].indexOf(key));
+            list.add(description);
+        }
     }
 }
