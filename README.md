@@ -9,3 +9,10 @@
 ```
 
 ### Building Ontology via Protege Api
+```
+<dependency>
+    <groupId>edu.stanford.protege</groupId>
+    <artifactId>protege-editor-owl</artifactId>
+    <version>5.2.0</version>
+</dependency>
+```
