@@ -1,9 +1,6 @@
-package View;
+package view;
 
-import Controllers.MainController;
-import com.itextpdf.text.pdf.PdfReader;
-import com.itextpdf.text.pdf.parser.PdfTextExtractor;
-import org.apache.log4j.Logger;
+import controllers.MainController;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
@@ -12,7 +9,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.io.IOException;
 
 public class MainForm extends JFrame implements MainView{
     private JPanel choseFgosPanel;
@@ -98,9 +94,9 @@ public class MainForm extends JFrame implements MainView{
         JMenu helpMenu = new JMenu("Справка");
         helpMenu.setFont(font);
 
-        JMenu newMenu = new JMenu("О программе");
-        newMenu.setFont(font);
-        helpMenu.add(newMenu);
+        JMenuItem aboutItem = new JMenu("О программе");
+        aboutItem.setFont(font);
+        helpMenu.add(aboutItem);
 
         return helpMenu;
     }

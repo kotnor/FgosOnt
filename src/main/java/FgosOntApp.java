@@ -1,4 +1,4 @@
-import View.MainForm;
+import view.MainForm;
 
 public class FgosOntApp {
     public static void main(String[] args) {
