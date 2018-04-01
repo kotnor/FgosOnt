@@ -24,15 +24,15 @@ public class ResMastering {
         parsePK(block.substring(block.indexOf("5.4"), block.indexOf("5.5")));
 
         for (int i = 0; i < commonCompetencies.size(); i++) {
-            System.out.println("ОК-" + (i + 1) + " : " + commonCompetencies.get(i));
+            // System.out.println("ОК-" + (i + 1) + " : " + commonCompetencies.get(i));
         }
 
         for (int i = 0; i < commonProfCompetencies.size(); i++) {
-            System.out.println("ОПК-" + (i + 1) + " : " + commonProfCompetencies.get(i));
+            // System.out.println("ОПК-" + (i + 1) + " : " + commonProfCompetencies.get(i));
         }
 
         for (int i = 0; i < profCompetencies.size(); i++) {
-            System.out.println("ПК-" + (i + 1) + " : " + profCompetencies.get(i));
+            // System.out.println("ПК-" + (i + 1) + " : " + profCompetencies.get(i));
         }
     }
 

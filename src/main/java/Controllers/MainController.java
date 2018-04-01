@@ -1,6 +1,7 @@
 package controllers;
 
 import model.ResMastering;
+import model.reqtostructure.ReqToStructure;
 import utils.StringUtils;
 import view.MainView;
 import com.itextpdf.text.pdf.PdfReader;
@@ -46,6 +47,40 @@ public class MainController {
         return block;
     }
 
+    private String getReqToStructureBlock() throws IOException{
+        int startPage = -1;
+        String textFromStartPage = null;
+        System.out.println(reader.getNumberOfPages());
+        int i = 1;
+        for (i = 1; i <= reader.getNumberOfPages(); i++) {
+            String textFromPage = PdfTextExtractor.getTextFromPage(reader, i);
+            if (textFromPage.contains(ReqToStructure.KEY_NAME)) {
+                startPage = i;
+                textFromStartPage = textFromPage;
+                break;
+            }
+        }
+
+        if (i > reader.getNumberOfPages()) {
+            return null;
+        }
+
+        StringBuilder allPages = new StringBuilder();
+        for (int j = i; j <= reader.getNumberOfPages(); j++) {
+            allPages.append(PdfTextExtractor.getTextFromPage(reader, j))
+                    .append("\n");
+        }
+
+        String allPagesString = allPages.toString();
+
+        int startIndex = allPagesString.indexOf(ReqToStructure.KEY_NAME); // + ResMastering.KEY_NAME.length();
+        int pointNumber = StringUtils.nextNumber(textFromStartPage, startIndex);
+        String endBlock = (pointNumber + 1) + ".1";
+        String block = allPagesString.substring(startIndex, allPagesString.indexOf(endBlock));
+
+        return block;
+    }
+
     public MainController(MainView view) {
         this.mainView = view;
     }
@@ -57,6 +92,7 @@ public class MainController {
 
             //System.out.println(textFromPage);
             ResMastering resMastering = new ResMastering(getResMasteringBlock());
+            ReqToStructure reqToStructure = new ReqToStructure(getReqToStructureBlock());
             reader.close();
         } catch (IOException ex) {
             ex.printStackTrace();

@@ -1,5 +1,7 @@
 package utils;
 
+import model.MinMax;
+
 public class StringUtils {
     public static int indexOfNextDigit(String string, int startIndex) {
         if (string == null) {
@@ -34,5 +36,18 @@ public class StringUtils {
         }
 
         return Integer.parseInt(stringBuilder.toString());
+    }
+
+    // text has type <value> or <value - value>
+    public static MinMax getMinMax(String text) {
+//    System.out.println("GetMinMax: " + text);
+        try {
+            int value = Integer.parseInt(text);
+            return new MinMax(value, value);
+        } catch (Exception e) {
+            Integer minNumber = nextNumber(text, 0);
+            Integer maxNumber = nextNumber(text, text.indexOf(minNumber) + minNumber.toString().length() + 1);
+            return new MinMax(minNumber, maxNumber);
+        }
     }
 }
