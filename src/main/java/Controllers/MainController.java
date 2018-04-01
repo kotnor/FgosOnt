@@ -1,5 +1,6 @@
 package controllers;
 
+import model.Fgos;
 import model.ResMastering;
 import model.reqtostructure.ReqToStructure;
 import utils.StringUtils;
@@ -87,12 +88,13 @@ public class MainController {
 
     public void startParsing(String path) {
         mainView.startParsing();
+        Fgos fgos = new Fgos();
         try {
             reader = new PdfReader(path);
-
-            //System.out.println(textFromPage);
             ResMastering resMastering = new ResMastering(getResMasteringBlock());
             ReqToStructure reqToStructure = new ReqToStructure(getReqToStructureBlock());
+            fgos.resMastering = resMastering;
+            fgos.reqToStructure = reqToStructure;
             reader.close();
         } catch (IOException ex) {
             ex.printStackTrace();

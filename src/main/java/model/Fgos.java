@@ -1,8 +1,10 @@
 package model;
 
+import lombok.Getter;
+import lombok.Setter;
 import model.reqtostructure.ReqToStructure;
 
 public class Fgos {
-    ResMastering resMastering;
-    ReqToStructure reqToStructure;
+    @Getter @Setter public ResMastering resMastering;
+    @Getter @Setter public ReqToStructure reqToStructure;
 }
