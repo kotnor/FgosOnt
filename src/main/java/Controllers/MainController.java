@@ -99,6 +99,8 @@ public class MainController {
         } catch (IOException ex) {
             ex.printStackTrace();
         }
+        Ontology ontology = new Ontology();
+        ontology.setResMastering(fgos.resMastering);
         mainView.endParsing();
         /*
          * Какие-то действия.

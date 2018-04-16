@@ -1,13 +1,16 @@
 package model;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 public class ResMastering {
-    private List<String> commonCompetencies;
-    private List<String> commonProfCompetencies;
-    private List<String> profCompetencies;
+    @Getter @Setter public List<String> commonCompetencies;
+    @Getter @Setter public List<String> commonProfCompetencies;
+    @Getter @Setter public List<String> profCompetencies;
     public static String KEY_NAME = "ТРЕБОВАНИЯ К РЕЗУЛЬТАТАМ ОСВОЕНИЯ ПРОГРАММЫ МАГИСТРАТУРЫ";
 
     public ResMastering(String block) {
