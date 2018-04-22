@@ -3,6 +3,7 @@ package controllers;
 import com.itextpdf.text.Rectangle;
 import com.itextpdf.text.pdf.parser.*;
 import model.Fgos;
+import model.profactivity.ProfActivity;
 import model.resmastering.ResMastering;
 import model.reqtostructure.ReqToStructure;
 import utils.StringUtils;
@@ -104,6 +105,40 @@ public class MainController {
         return block;
     }
 
+    private String getProfActivityBlock() throws IOException{
+        int startPage = -1;
+        String textFromStartPage = null;
+        System.out.println(reader.getNumberOfPages());
+        int i = 1;
+        for (i = 1; i <= reader.getNumberOfPages(); i++) {
+            String textFromPage = PdfTextExtractor.getTextFromPage(reader, i);
+            textFromPage = getCleanPage(textFromPage);
+
+            if (textFromPage.contains(ProfActivity.KEY_NAME)) {
+                startPage = i;
+                textFromStartPage = textFromPage;
+                break;
+            }
+        }
+
+        if (i > reader.getNumberOfPages()) {
+            return null;
+        }
+
+        StringBuilder allPages = new StringBuilder();
+        for (int j = i; j <= reader.getNumberOfPages(); j++) {
+            allPages.append(getCleanPage(PdfTextExtractor.getTextFromPage(reader, j)))
+                    .append("\n");
+        }
+
+        String allPagesString = allPages.toString();
+
+        int startIndex = allPagesString.indexOf("4.1"); // + ResMastering.KEY_NAME.length();
+        String block = allPagesString.substring(startIndex, allPagesString.indexOf("5.1"));
+
+        return block;
+    }
+
     public MainController(MainView view) {
         this.mainView = view;
     }
@@ -115,8 +150,10 @@ public class MainController {
             reader = new PdfReader(path);
             ResMastering resMastering = new ResMastering(getResMasteringBlock());
             ReqToStructure reqToStructure = new ReqToStructure(getReqToStructureBlock());
+            ProfActivity profActivity = new ProfActivity(getProfActivityBlock());
             fgos.resMastering = resMastering;
             fgos.reqToStructure = reqToStructure;
+            fgos.profActivity = profActivity;
             reader.close();
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -124,6 +161,7 @@ public class MainController {
         Ontology ontology = new Ontology();
         ontology.setResMastering(fgos.resMastering);
         ontology.setReqToStructure(fgos.reqToStructure);
+        ontology.setProfActivity(fgos.profActivity);
         mainView.endParsing();
         /*
          * Какие-то действия.

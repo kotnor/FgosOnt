@@ -1,5 +1,6 @@
 package controllers;
 
+import model.profactivity.ProfActivity;
 import model.resmastering.ResMastering;
 import model.reqtostructure.ReqToStructure;
 import org.semanticweb.owlapi.apibinding.OWLManager;
@@ -181,6 +182,19 @@ public class Ontology {
         fillThirdBlock(reqToStructure);
         fillVEducation(reqToStructure);
 
+        try {
+            File output = new File("D:/saved_pizza2.owl");
+            IRI documentIRI2 = IRI.create(output);
+// save in RDF/XML
+            manager.saveOntology(fgosPattern, documentIRI2);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void setProfActivity(ProfActivity profActivity) {
+        OWLClass owlClass = df.getOWLClass(IRI.create(fgosIRI + "#Объект_деятельности"));
+        addIndividualNumberWithComment(owlClass, profActivity.objectsProfActivity, "#Объект_деятельности-");
         try {
             File output = new File("D:/saved_pizza2.owl");
             IRI documentIRI2 = IRI.create(output);
