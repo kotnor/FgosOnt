@@ -1,14 +1,17 @@
 package controllers;
 
+import com.itextpdf.text.Rectangle;
+import com.itextpdf.text.pdf.parser.*;
 import model.Fgos;
-import model.ResMastering;
+import model.resmastering.ResMastering;
 import model.reqtostructure.ReqToStructure;
 import utils.StringUtils;
 import view.MainView;
 import com.itextpdf.text.pdf.PdfReader;
-import com.itextpdf.text.pdf.parser.PdfTextExtractor;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.PrintWriter;
 
 public class MainController {
     private MainView mainView;
@@ -18,9 +21,13 @@ public class MainController {
         int startPage = -1;
         String textFromStartPage = null;
         System.out.println(reader.getNumberOfPages());
+
         int i = 1;
         for (i = 1; i <= reader.getNumberOfPages(); i++) {
             String textFromPage = PdfTextExtractor.getTextFromPage(reader, i);
+            textFromPage = getCleanPage(textFromPage);
+
+            System.out.println("TextFromPage:" + textFromPage);
             if (textFromPage.contains(ResMastering.KEY_NAME)) {
                 startPage = i;
                 textFromStartPage = textFromPage;
@@ -34,7 +41,7 @@ public class MainController {
 
         StringBuilder allPages = new StringBuilder();
         for (int j = i; j <= reader.getNumberOfPages(); j++) {
-            allPages.append(PdfTextExtractor.getTextFromPage(reader, j))
+            allPages.append(getCleanPage(PdfTextExtractor.getTextFromPage(reader, j)))
                     .append("\n");
         }
 
@@ -48,6 +55,19 @@ public class MainController {
         return block;
     }
 
+    private String getCleanPage(String textFromPage) {
+        if (textFromPage.contains("Консультант") && textFromPage.contains(("надежная правовая поддержка"))) {
+            int indexPoints = textFromPage.indexOf("стандарта");
+            int indexConsultant = textFromPage.lastIndexOf("КонсультантПлюс");
+            if (indexConsultant != -1) {
+                textFromPage = textFromPage.substring(indexPoints + 13, textFromPage.lastIndexOf("КонсультантПлюс"));
+            }
+        } else {
+            return textFromPage;
+        }
+        return textFromPage;
+    }
+
     private String getReqToStructureBlock() throws IOException{
         int startPage = -1;
         String textFromStartPage = null;
@@ -55,6 +75,8 @@ public class MainController {
         int i = 1;
         for (i = 1; i <= reader.getNumberOfPages(); i++) {
             String textFromPage = PdfTextExtractor.getTextFromPage(reader, i);
+            textFromPage = getCleanPage(textFromPage);
+
             if (textFromPage.contains(ReqToStructure.KEY_NAME)) {
                 startPage = i;
                 textFromStartPage = textFromPage;
@@ -68,7 +90,7 @@ public class MainController {
 
         StringBuilder allPages = new StringBuilder();
         for (int j = i; j <= reader.getNumberOfPages(); j++) {
-            allPages.append(PdfTextExtractor.getTextFromPage(reader, j))
+            allPages.append(getCleanPage(PdfTextExtractor.getTextFromPage(reader, j)))
                     .append("\n");
         }
 
@@ -101,6 +123,7 @@ public class MainController {
         }
         Ontology ontology = new Ontology();
         ontology.setResMastering(fgos.resMastering);
+        ontology.setReqToStructure(fgos.reqToStructure);
         mainView.endParsing();
         /*
          * Какие-то действия.
