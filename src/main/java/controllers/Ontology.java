@@ -34,16 +34,11 @@ public class Ontology {
 
     }
 
-    private void addIndividualNumberWithComment(OWLClass owlClass, List<String> comments, String prefix) {
-        for (int i = 0; i < comments.size(); i++) {
-            OWLIndividual opkIndividual = df.getOWLNamedIndividual((IRI.create(fgosIRI + prefix + (i + 1))));
-            OWLAnnotation commentAnno = df.getOWLAnnotation(df.getRDFSComment(), df.getOWLLiteral(comments.get(i)));
-            OWLAxiom axiom = df.getOWLAnnotationAssertionAxiom(
-                    opkIndividual.asOWLNamedIndividual().getIRI(), commentAnno);
-            manager.applyChange(new AddAxiom(fgosPattern, axiom));
-            OWLClassAssertionAxiom classAssertion = df.getOWLClassAssertionAxiom(owlClass, opkIndividual);
-            manager.addAxiom(fgosPattern, classAssertion);
-        }
+
+    public void setProfActivity(ProfActivity profActivity) {
+        fillObjProfActivity(profActivity);
+        fillTypesProfActivity(profActivity);
+        fillAreasProfActivity(profActivity);
     }
 
     public void setResMastering(ResMastering resMastering) {
@@ -77,6 +72,38 @@ public class Ontology {
             e.printStackTrace();
         }
     }
+
+    private void fillObjProfActivity(ProfActivity profActivity) {
+        OWLClass owlClass = df.getOWLClass(IRI.create(fgosIRI + "#Объект_деятельности"));
+        addIndividualNumberWithComment(owlClass, profActivity.objectsProfActivity, "#Объект_деятельности-");
+        saveOntology();
+    }
+
+    private void fillAreasProfActivity(ProfActivity profActivity) {
+        OWLClass owlClass = df.getOWLClass(IRI.create(fgosIRI + "#Область_деятельности"));
+        addIndividualNumberWithComment(owlClass, profActivity.areasProfActivity, "#Область_деятельности-");
+        saveOntology();
+    }
+
+    private void fillTypesProfActivity(ProfActivity profActivity) {
+        OWLClass owlClass = df.getOWLClass(IRI.create(fgosIRI + "#Вид_деятельности"));
+        addIndividualNumberWithComment(owlClass, profActivity.typesProfActivity, "#Вид_деятельности-");
+        saveOntology();
+    }
+
+    private void addIndividualNumberWithComment(OWLClass owlClass, List<String> comments, String prefix) {
+        for (int i = 0; i < comments.size(); i++) {
+            OWLIndividual opkIndividual = df.getOWLNamedIndividual((IRI.create(fgosIRI + prefix + (i + 1))));
+            OWLAnnotation commentAnno = df.getOWLAnnotation(df.getRDFSComment(), df.getOWLLiteral(comments.get(i)));
+            OWLAxiom axiom = df.getOWLAnnotationAssertionAxiom(
+                    opkIndividual.asOWLNamedIndividual().getIRI(), commentAnno);
+            manager.applyChange(new AddAxiom(fgosPattern, axiom));
+            OWLClassAssertionAxiom classAssertion = df.getOWLClassAssertionAxiom(owlClass, opkIndividual);
+            manager.addAxiom(fgosPattern, classAssertion);
+        }
+    }
+
+
 
     private void assignOwlDataProp(OWLIndividual individual, String propertyName, OWLClass owlClassDomain, Double value) {
         OWLDataProperty vBasicDataProperty = df.getOWLDataProperty(IRI.create(fgosIRI + propertyName));
@@ -182,19 +209,9 @@ public class Ontology {
         fillThirdBlock(reqToStructure);
         fillVEducation(reqToStructure);
 
-        try {
-            File output = new File("D:/saved_pizza2.owl");
-            IRI documentIRI2 = IRI.create(output);
-// save in RDF/XML
-            manager.saveOntology(fgosPattern, documentIRI2);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        saveOntology();
     }
-
-    public void setProfActivity(ProfActivity profActivity) {
-        OWLClass owlClass = df.getOWLClass(IRI.create(fgosIRI + "#Объект_деятельности"));
-        addIndividualNumberWithComment(owlClass, profActivity.objectsProfActivity, "#Объект_деятельности-");
+    private void saveOntology() {
         try {
             File output = new File("D:/saved_pizza2.owl");
             IRI documentIRI2 = IRI.create(output);
