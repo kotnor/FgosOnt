@@ -11,6 +11,8 @@ import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
 import org.semanticweb.owlapi.reasoner.structural.StructuralReasonerFactory;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class Ontology {
@@ -37,7 +39,7 @@ public class Ontology {
 
     public void setProfActivity(ProfActivity profActivity) {
         fillObjProfActivity(profActivity);
-        fillTypesProfActivity(profActivity);
+        fillTasksProfActivity(profActivity);
         fillAreasProfActivity(profActivity);
     }
 
@@ -91,7 +93,17 @@ public class Ontology {
         saveOntology();
     }
 
-    private void addIndividualNumberWithComment(OWLClass owlClass, List<String> comments, String prefix) {
+    private void fillTasksProfActivity(ProfActivity profActivity) {
+        OWLClass owlClass = df.getOWLClass(IRI.create(fgosIRI + "#Вид_деятельности"));
+        List<OWLIndividual> owlIndividuals = addIndividualNumberWithComment(owlClass, profActivity.typesProfActivity, "#Вид_деятельности-");
+        for (int i = 0; i < owlIndividuals.size(); i++) {
+            addIndividualNumberWithCommentAndAxiom(owlIndividuals.get(i), profActivity.profTasks.get(profActivity.typesProfActivity.get(i)), "#Задача_вида_деятельности_" + (i + 1) + "-", "#решает_задачу");
+        }
+        saveOntology();
+    }
+
+    private List<OWLIndividual> addIndividualNumberWithComment(OWLClass owlClass, List<String> comments, String prefix) {
+        List<OWLIndividual> owlIndividuals = new ArrayList<OWLIndividual>();
         for (int i = 0; i < comments.size(); i++) {
             OWLIndividual opkIndividual = df.getOWLNamedIndividual((IRI.create(fgosIRI + prefix + (i + 1))));
             OWLAnnotation commentAnno = df.getOWLAnnotation(df.getRDFSComment(), df.getOWLLiteral(comments.get(i)));
@@ -100,10 +112,24 @@ public class Ontology {
             manager.applyChange(new AddAxiom(fgosPattern, axiom));
             OWLClassAssertionAxiom classAssertion = df.getOWLClassAssertionAxiom(owlClass, opkIndividual);
             manager.addAxiom(fgosPattern, classAssertion);
+            owlIndividuals.add(opkIndividual);
         }
+        return owlIndividuals;
     }
 
-
+    private void addIndividualNumberWithCommentAndAxiom(OWLIndividual owlClass, List<String> comments, String prefix, String axiomName) {
+        List<OWLIndividual> owlIndividuals = new ArrayList<OWLIndividual>();
+        for (int i = 0; i < comments.size(); i++) {
+            OWLIndividual opkIndividual = df.getOWLNamedIndividual((IRI.create(fgosIRI + prefix + (i + 1))));
+            OWLAnnotation commentAnno = df.getOWLAnnotation(df.getRDFSComment(), df.getOWLLiteral(comments.get(i)));
+            OWLAxiom axiom = df.getOWLAnnotationAssertionAxiom(
+                    opkIndividual.asOWLNamedIndividual().getIRI(), commentAnno);
+            manager.applyChange(new AddAxiom(fgosPattern, axiom));
+            OWLObjectPropertyAssertionAxiom classAssertion = df.getOWLObjectPropertyAssertionAxiom(df.getOWLObjectProperty(IRI.create(fgosIRI + axiomName)), owlClass, opkIndividual);
+            manager.addAxiom(fgosPattern, classAssertion);
+            owlIndividuals.add(opkIndividual);
+        }
+    }
 
     private void assignOwlDataProp(OWLIndividual individual, String propertyName, OWLClass owlClassDomain, Double value) {
         OWLDataProperty vBasicDataProperty = df.getOWLDataProperty(IRI.create(fgosIRI + propertyName));

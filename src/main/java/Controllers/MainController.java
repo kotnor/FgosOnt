@@ -28,7 +28,7 @@ public class MainController {
             String textFromPage = PdfTextExtractor.getTextFromPage(reader, i);
             textFromPage = getCleanPage(textFromPage);
 
-            System.out.println("TextFromPage:" + textFromPage);
+//            System.out.println("TextFromPage:" + textFromPage);
             if (textFromPage.contains(ResMastering.KEY_NAME)) {
                 startPage = i;
                 textFromStartPage = textFromPage;

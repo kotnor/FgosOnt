@@ -23,7 +23,7 @@ public class ResMastering {
 
     private void parse(String block) {
         System.out.println("Block!");
-        System.out.println(block);
+//        System.out.println(block);
         parseOK(block.substring(block.indexOf("5.2"), block.indexOf("5.3")));
         parseOPK(block.substring(block.indexOf("5.3"), block.indexOf("5.4")));
         parsePK(block.substring(block.indexOf("5.4"), block.indexOf("5.5")));
