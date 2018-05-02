@@ -1,6 +1,8 @@
 package view;
 
+import model.Fgos;
+
 public interface MainView {
     void startParsing();
-    void endParsing();
+    void endParsing(Fgos fgos);
 }

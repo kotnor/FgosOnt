@@ -199,7 +199,7 @@ public class MainController {
         ontology.setResMastering(fgos.resMastering);
         ontology.setReqToStructure(fgos.reqToStructure);
         ontology.setProfActivity(fgos.profActivity);
-        mainView.endParsing();
+        mainView.endParsing(fgos);
         /*
          * Какие-то действия.
          */
