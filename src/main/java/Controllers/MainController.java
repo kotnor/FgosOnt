@@ -3,6 +3,7 @@ package controllers;
 import com.itextpdf.text.Rectangle;
 import com.itextpdf.text.pdf.parser.*;
 import model.Fgos;
+import model.conditionsofimplementation.CondImpl;
 import model.profactivity.ProfActivity;
 import model.resmastering.ResMastering;
 import model.reqtostructure.ReqToStructure;
@@ -139,6 +140,40 @@ public class MainController {
         return block;
     }
 
+    private String getCondImplBlock() throws IOException{
+        int startPage = -1;
+        String textFromStartPage = null;
+        System.out.println(reader.getNumberOfPages());
+        int i = 1;
+        for (i = 1; i <= reader.getNumberOfPages(); i++) {
+            String textFromPage = PdfTextExtractor.getTextFromPage(reader, i);
+            textFromPage = getCleanPage(textFromPage);
+
+            if (textFromPage.contains(ProfActivity.KEY_NAME)) {
+                startPage = i;
+                textFromStartPage = textFromPage;
+                break;
+            }
+        }
+
+        if (i > reader.getNumberOfPages()) {
+            return null;
+        }
+
+        StringBuilder allPages = new StringBuilder();
+        for (int j = i; j <= reader.getNumberOfPages(); j++) {
+            allPages.append(getCleanPage(PdfTextExtractor.getTextFromPage(reader, j)))
+                    .append("\n");
+        }
+
+        String allPagesString = allPages.toString();
+
+        int startIndex = allPagesString.indexOf("7.1"); // + ResMastering.KEY_NAME.length();
+        String block = allPagesString.substring(startIndex);
+
+        return block;
+    }
+
     public MainController(MainView view) {
         this.mainView = view;
     }
@@ -151,9 +186,11 @@ public class MainController {
             ResMastering resMastering = new ResMastering(getResMasteringBlock());
             ReqToStructure reqToStructure = new ReqToStructure(getReqToStructureBlock());
             ProfActivity profActivity = new ProfActivity(getProfActivityBlock());
+            CondImpl condImpl = new CondImpl(getCondImplBlock());
             fgos.resMastering = resMastering;
             fgos.reqToStructure = reqToStructure;
             fgos.profActivity = profActivity;
+            fgos.condImpl = condImpl;
             reader.close();
         } catch (IOException ex) {
             ex.printStackTrace();

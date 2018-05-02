@@ -55,16 +55,16 @@ public class ProfActivity {
                 String[] profTasksSplitted = block.split(";");
                 for (int j = 0; j < profTasksSplitted.length - 1; j++) {
                     profTasksForType.add(profTasksSplitted[j]);
-                    System.out.println("HAHAHA: " + profTasksSplitted[j]);
+//                    System.out.println("HAHAHA: " + profTasksSplitted[j]);
                 }
             } else {
                 String[] profTasksSplitted = block.split(";");
                 for (int j = 0; j < profTasksSplitted.length - 1; j++) {
                     profTasksForType.add(profTasksSplitted[j]);
-                    System.out.println("HAHAHA: " + profTasksSplitted[j]);
+//                    System.out.println("HAHAHA: " + profTasksSplitted[j]);
                 }
                 String last = profTasksSplitted[profTasksSplitted.length - 1];
-                System.out.println("HAHAHALAST: " + last.substring(0, last.indexOf(".")));
+//                System.out.println("HAHAHALAST: " + last.substring(0, last.indexOf(".")));
                 profTasksForType.add(last.substring(0, last.indexOf(".")));
             }
             profTasks.put(type, profTasksForType);
