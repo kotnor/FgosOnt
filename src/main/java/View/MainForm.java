@@ -9,7 +9,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
+import java.io.*;
 
 public class MainForm extends JFrame implements MainView {
     private JPanel choseFgosPanel;
@@ -19,6 +19,7 @@ public class MainForm extends JFrame implements MainView {
     private JProgressBar pbParsing;
     private MainController mainController;
     private File currentFile;
+    private Fgos fgos;
 
     public MainForm() {
         mainController = new MainController(this);
@@ -69,13 +70,13 @@ public class MainForm extends JFrame implements MainView {
         JMenu fileMenu = new JMenu("Файл");
         fileMenu.setFont(font);
 
-        JMenuItem openItem = new JMenuItem("Открыть");
+        JMenuItem openItem = new JMenuItem("Открыть ФГОС");
         openItem.setFont(font);
         fileMenu.add(openItem);
 
-        JMenuItem closeItem = new JMenuItem("Закрыть");
-        closeItem.setFont(font);
-        fileMenu.add(closeItem);
+        JMenuItem saveFgosItem = new JMenuItem("Сохранить ФГОС");
+        saveFgosItem.setFont(font);
+        fileMenu.add(saveFgosItem);
 
         fileMenu.addSeparator();
 
@@ -83,12 +84,54 @@ public class MainForm extends JFrame implements MainView {
         exitItem.setFont(font);
         fileMenu.add(exitItem);
 
+        openItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                JFileChooser fileopen = new JFileChooser();
+                FileFilter filter = new FileNameExtensionFilter("FgosOnt files", "fgosont");
+                fileopen.setFileFilter(filter);
+                int ret = fileopen.showDialog(null, "Открыть файл");
+                if (ret == JFileChooser.APPROVE_OPTION) {
+                    File file = fileopen.getSelectedFile();
+                    try {
+                        ObjectInputStream in = new ObjectInputStream(new FileInputStream(file));
+                        Fgos fgos = (Fgos) in.readObject();
+                        openFgos(fgos);
+                    } catch (Exception ex) {
+                    }
+                }
+            }
+        });
+
+        if (fgos != null) {
+            saveFgosItem.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    JFileChooser fileSave = new JFileChooser();
+                    FileFilter filter = new FileNameExtensionFilter("FgosOnt files", "fgosont");
+                    fileSave.setFileFilter(filter);
+                    int ret = fileSave.showSaveDialog(null);
+                    if (ret == JFileChooser.APPROVE_OPTION) {
+                        try {
+                            ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(fileSave.getSelectedFile()));
+                            out.writeObject(fgos);
+                            out.close();
+                        } catch (IOException ex) {
+                        }
+                    }
+                }
+            });
+        }
+
         exitItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 System.exit(0);
             }
         });
         return fileMenu;
+    }
+
+    private void openFgos(Fgos fgos) {
+        dispose();
+        new ConfirmForm(fgos);
     }
 
     private JMenu createHelpMenu(Font font) {

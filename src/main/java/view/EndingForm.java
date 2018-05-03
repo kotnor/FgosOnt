@@ -9,7 +9,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
+import java.io.*;
 
 public class EndingForm extends JFrame {
     private JLabel statusLabel;
@@ -17,8 +17,10 @@ public class EndingForm extends JFrame {
     private JButton continueButton;
     private JButton exitButton;
     private JPanel mainPanel;
+    private Fgos fgos;
 
     public EndingForm(Fgos fgos) {
+        this.fgos = fgos;
         setSize(600, 600);
         setName("Ontology FGOS");
         setTitle("Онтология ФГОС");
@@ -60,30 +62,56 @@ public class EndingForm extends JFrame {
         JMenu fileMenu = new JMenu("Файл");
         fileMenu.setFont(font);
 
-        JMenuItem openItem = new JMenuItem("Открыть");
+        JMenuItem openItem = new JMenuItem("Открыть ФГОС");
         openItem.setFont(font);
         fileMenu.add(openItem);
 
-        JMenuItem closeItem = new JMenuItem("Закрыть");
-        closeItem.setFont(font);
-        fileMenu.add(closeItem);
+        JMenuItem saveFgosItem = new JMenuItem("Сохранить ФГОС");
+        saveFgosItem.setFont(font);
+        fileMenu.add(saveFgosItem);
 
         fileMenu.addSeparator();
-
-        JMenuItem newItem = new JMenuItem("Новый");
-        newItem.setFont(font);
-        fileMenu.add(newItem);
-
-        newItem.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                dispose();
-                new MainForm();
-            }
-        });
 
         JMenuItem exitItem = new JMenuItem("Выход");
         exitItem.setFont(font);
         fileMenu.add(exitItem);
+
+        openItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                JFileChooser fileopen = new JFileChooser();
+                FileFilter filter = new FileNameExtensionFilter("FgosOnt files", "fgosont");
+                fileopen.setFileFilter(filter);
+                int ret = fileopen.showDialog(null, "Открыть файл");
+                if (ret == JFileChooser.APPROVE_OPTION) {
+                    File file = fileopen.getSelectedFile();
+                    try {
+                        ObjectInputStream in = new ObjectInputStream(new FileInputStream(file));
+                        Fgos fgos = (Fgos) in.readObject();
+                        openFgos(fgos);
+                    } catch (Exception ex) {
+                    }
+                }
+            }
+        });
+
+        if (fgos != null) {
+            saveFgosItem.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    JFileChooser fileSave = new JFileChooser();
+                    FileFilter filter = new FileNameExtensionFilter("FgosOnt files", "fgosont");
+                    fileSave.setFileFilter(filter);
+                    int ret = fileSave.showSaveDialog(null);
+                    if (ret == JFileChooser.APPROVE_OPTION) {
+                        try {
+                            ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(fileSave.getSelectedFile()));
+                            out.writeObject(fgos);
+                            out.close();
+                        } catch (IOException ex) {
+                        }
+                    }
+                }
+            });
+        }
 
         exitItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -92,6 +120,12 @@ public class EndingForm extends JFrame {
         });
         return fileMenu;
     }
+
+    private void openFgos(Fgos fgos) {
+        dispose();
+        new ConfirmForm(fgos);
+    }
+
 
     private JMenu createHelpMenu(Font font) {
         JMenu helpMenu = new JMenu("Справка");
