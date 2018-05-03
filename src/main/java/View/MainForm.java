@@ -45,7 +45,7 @@ public class MainForm extends JFrame implements MainView {
     }
 
     private void initUI() {
-        setSize(400, 400);
+        setSize(600, 600);
         setName("Ontology FGOS");
         setTitle("Онтология ФГОС");
 

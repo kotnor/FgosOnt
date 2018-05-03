@@ -1,5 +1,6 @@
 package controllers;
 
+import model.Fgos;
 import model.profactivity.ProfActivity;
 import model.resmastering.ResMastering;
 import model.reqtostructure.ReqToStructure;
@@ -36,6 +37,12 @@ public class Ontology {
 
     }
 
+    public void saveFgosInOntology(Fgos fgos, String fileName) {
+        this.setProfActivity(fgos.profActivity);
+        this.setReqToStructure(fgos.reqToStructure);
+        this.setResMastering(fgos.resMastering);
+        this.saveOntology(fileName);
+    }
 
     public void setProfActivity(ProfActivity profActivity) {
         fillObjProfActivity(profActivity);
@@ -240,6 +247,17 @@ public class Ontology {
     private void saveOntology() {
         try {
             File output = new File("D:/saved_pizza2.owl");
+            IRI documentIRI2 = IRI.create(output);
+// save in RDF/XML
+            manager.saveOntology(fgosPattern, documentIRI2);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void saveOntology(String file) {
+        try {
+            File output = new File(file);
             IRI documentIRI2 = IRI.create(output);
 // save in RDF/XML
             manager.saveOntology(fgosPattern, documentIRI2);
