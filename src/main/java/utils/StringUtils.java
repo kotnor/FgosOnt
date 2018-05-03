@@ -46,7 +46,7 @@ public class StringUtils {
             return new MinMax(value, value);
         } catch (Exception e) {
             Integer minNumber = nextNumber(text, 0);
-            Integer maxNumber = nextNumber(text, text.indexOf(minNumber) + minNumber.toString().length() + 1);
+            Integer maxNumber = nextNumber(text, text.indexOf(minNumber + "") + minNumber.toString().length() + 1);
             return new MinMax(minNumber, maxNumber);
         }
     }

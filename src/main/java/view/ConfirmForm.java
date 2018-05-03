@@ -138,7 +138,7 @@ public class ConfirmForm extends JFrame {
         maxCommonBlock2Volume.setText(reqToStructure.getSecondBlock().getBlockTwoRange().getMax() + "");
 
         minCommonBlock3Volume.setText(reqToStructure.getThirdBlock().getBlockThreeRange().getMin() + "");
-        maxCommonBlock3Volume.setText(reqToStructure.getThirdBlock().getBlockThreeRange().getMin() + "");
+        maxCommonBlock3Volume.setText(reqToStructure.getThirdBlock().getBlockThreeRange().getMax() + "");
     }
 
     private JMenuBar createMenuBar() {
