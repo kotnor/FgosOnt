@@ -3,9 +3,10 @@ package model.reqtostructure;
 import model.MinMax;
 import utils.StringUtils;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class ReqToStructure {
+public class ReqToStructure implements Serializable{
     private FirstBlock firstBlock;
     private SecondBlock secondBlock;
     private ThirdBlock thirdBlock;

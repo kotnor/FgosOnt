@@ -3,11 +3,12 @@ package model.resmastering;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class ResMastering {
+public class ResMastering implements Serializable{
     @Getter @Setter public List<String> commonCompetencies;
     @Getter @Setter public List<String> commonProfCompetencies;
     @Getter @Setter public List<String> profCompetencies;

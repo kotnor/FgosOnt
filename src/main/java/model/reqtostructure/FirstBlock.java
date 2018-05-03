@@ -3,6 +3,8 @@ package model.reqtostructure;
 import model.MinMax;
 import utils.StringUtils;
 
+import java.io.Serializable;
+
 public class FirstBlock implements Block {
     private final String name = "Дисциплины (модули)";
     private final String BLOCK_ONE = "Блок 1";

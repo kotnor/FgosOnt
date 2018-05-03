@@ -3,11 +3,12 @@ package model.profactivity;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class ProfActivity {
+public class ProfActivity implements Serializable {
     @Getter
     @Setter
     public List<String> objectsProfActivity;

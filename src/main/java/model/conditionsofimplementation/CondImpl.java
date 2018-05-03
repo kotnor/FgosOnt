@@ -2,10 +2,11 @@ package model.conditionsofimplementation;
 
 import utils.StringUtils;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CondImpl {
+public class CondImpl implements Serializable{
     private List<String> elementsElectronicEnvProvision;
     private int minStateEmpl = -1;
     private int maxStateEmpl = -1;

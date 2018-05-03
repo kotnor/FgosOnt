@@ -7,7 +7,9 @@ import model.profactivity.ProfActivity;
 import model.reqtostructure.ReqToStructure;
 import model.resmastering.ResMastering;
 
-public class Fgos {
+import java.io.Serializable;
+
+public class Fgos implements Serializable {
     @Getter @Setter public ResMastering resMastering;
     @Getter @Setter public ReqToStructure reqToStructure;
     @Getter @Setter public ProfActivity profActivity;

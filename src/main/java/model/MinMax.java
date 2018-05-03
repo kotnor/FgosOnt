@@ -1,6 +1,8 @@
 package model;
 
-public class MinMax {
+import java.io.Serializable;
+
+public class MinMax implements Serializable{
     double min = 0;
     double max = 0;
 
